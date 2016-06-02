@@ -24,10 +24,10 @@ github.authenticate({
 
 var getTopDevelopersInChennai = function (next) {
 
-    var developersInLocation =_.times(1, function (page) {
+    var developersInLocation =_.times(20, function (page) {
         return (function (callback) {
                 github.search.users({
-                        q: 'location:chennai+repos:>50',
+                        q: 'location:chennai+repos:>5',
                         sort: 'repositories',
                         per_page: 100,
                         page: page + 1
@@ -40,8 +40,9 @@ var getTopDevelopersInChennai = function (next) {
     });
 
     async.parallel(developersInLocation,function(err,response){
-
-        var items = _.flatten(_.map(response,"items"));
+        var items = _.filter(_.flatten(_.map(response,"items")), function (item) {
+            return !_.isUndefined(item);
+        });
         next(err,_.map(items,function(element){
             var profile = {} ;
             profile.loginId = element.login;
@@ -78,8 +79,6 @@ var getDeveloperRepos = function (profiles,next) {
 
 
 var extractDeveloperProfile = function(profiles){
-    //console.info(JSON.stringify(profiles))
-    console.info("UUUUU",_.keys(profiles[0]));
     var table = new Table({
         head: _.keys(profiles[0]),
         colWidths: [20, 50,10]
