@@ -7,11 +7,11 @@ var Table = require('cli-table');
 var github = new GitHubApi({
     //debug: true,
     protocol: "https",
-    host: "api.github.com", // should be api.github.com for GitHub
+    host: "api.github.com",
     timeout: 5000,
     version: '3.0.0',
     headers: {
-        "user-agent": "My-Cool-GitHub-App" // GitHub is happy with a unique user agent
+        "user-agent": "My-Cool-GitHub-App"
     }
 });
 
@@ -56,7 +56,7 @@ var getTopDevelopersInChennai = function (next) {
 
 };
 
-var enrichEmailAddress = function (profiles, next) {
+var enrichPersonalInfo = function (profiles, next) {
 
     var developersInLocation = _.map(profiles, function (profile) {
         return (function (callback) {
@@ -71,6 +71,10 @@ var enrichEmailAddress = function (profiles, next) {
                             console.info(result);
                         }
                         profile.email = result.email ? result.email : "";
+                        profile.name = result.name ? result.name : "";
+                        profile.company = result.company ? result.company : "";
+                        profile.blog = result.blog ? result.blog : "";
+                        profile.hireable = result.hireable ? "Yes" : "No";
                         callback(null, profile);
                     })
             }
@@ -111,7 +115,7 @@ var EnrichRepos = function (profiles, next) {
 var displayTopDeveloperProfiles = function (profiles) {
     var table = new Table({
         head: _.keys(profiles[0]),
-        colWidths: [20, 50, 50, 10]
+        colWidths: [20, 50, 50, 10, 10, 10, 10, 10 , 10]
     });
 
     _.forEach(profiles, function (profile) {
@@ -123,7 +127,7 @@ var displayTopDeveloperProfiles = function (profiles) {
 
 async.waterfall([
     getTopDevelopersInChennai,
-    enrichEmailAddress,
+    enrichPersonalInfo,
     EnrichRepos,
     displayTopDeveloperProfiles
 ], function (err, res) {
