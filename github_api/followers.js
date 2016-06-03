@@ -91,19 +91,19 @@ var EnrichRepos = function (profiles, next) {
             github.repos.getFromUser({
                 user: profile.loginId
             }, function (err, repositories) {
-                var ownedRepositories = _.filter(repositories, function (repository) {
-                    return !repository.fork && !_.isNull(repository.language)
-                });
+                var ownedRepositories = _.filter(repositories, {fork:false});
+                var forkedRepositories = _.filter(repositories, {fork:true});
                 //TODO get languages from language url.
                 profile.languages = _.uniq(_.map(ownedRepositories, "language"));
-                profile.repository_count = ownedRepositories.length;
+                profile.own_repository_count = ownedRepositories.length;
+                profile.forked_repository_count = forkedRepositories.length;
                 callback(null, profile)
             });
         });
     });
 
     async.parallel(listOfCallsForRepos, function (err, profiles) {
-        next(null, _.sortBy(_.reject(profiles, {repository_count: 0}), 'repository_count').reverse())
+        next(null, _.sortBy(_.reject(profiles, {own_repository_count: 0}), 'own_repository_count').reverse())
     })
 };
 
