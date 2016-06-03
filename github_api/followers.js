@@ -28,7 +28,7 @@ var getTopDevelopersInChennai = function (next) {
     var developersInLocation = _.times(10, function (page) {
         return (function (callback) {
                 github.search.users({
-                        q: 'location:chennai+repos:>10',
+                        q: 'location:chennai+repos:>10+type:user',
                         sort: 'repositories',
                         per_page: 100,
                         page: page + 1
