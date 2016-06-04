@@ -24,11 +24,14 @@ github.authenticate({
 
 
 var getTopDevelopersInChennai = function (next) {
-
+    // TODO Because of the limitations of the search api , we need to use something similar to split the developer search based
+    // on the repos count to avoid getting search results more than 1000 .
     var developersInLocation = _.times(10, function (page) {
         return (function (callback) {
                 github.search.users({
-                        q: 'location:chennai+repos:>10+type:user',
+                        //q: 'location:chennai+repos:>10+type:user',
+                        //q: 'location:chennai+repos:7..10+type:user',
+                        q: 'location:chennai+repos:5..6+type:user',
                         sort: 'repositories',
                         per_page: 100,
                         page: page + 1
@@ -116,7 +119,7 @@ var EnrichReposInfo = function (profiles, next) {
 };
 
 var EnrichDeveloperActivity = function (profiles, next) {
-
+    //TODO get all the events instead of only one page
     var developersActivityInfo = _.map(profiles, function (profile) {
         return (function (callback) {
             github.events.getFromUser({
