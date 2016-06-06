@@ -1,0 +1,3 @@
+Few developer profiles are duplicated . Need to fix.
+We need to write test !!!!
+For few developers the score is calculated as nan. Need to fix
