@@ -7,9 +7,9 @@ const fs = require('fs');
 
 const scores = {
     forked_repository_count: 1,
-    wikis_contributed: 3,
     //open_sourcing_private_repo_count : 5,
     push_count: 2,
+    wikis_contributed: 3,
     pull_request_reviewed: 8,
     own_repository_count: 10,
     languages_known: 10,
@@ -43,8 +43,8 @@ var getTopDevelopersInChennai = (next) => {
         return ( (callback) => {
                 github.search.users({
                         // q: 'location:chennai+repos:>10+type:user',
-                        q: 'location:chennai+repos:7..10+type:user',
-                        //q: 'location:chennai+repos:5..6+type:user',
+                        // q: 'location:chennai+repos:7..10+type:user',
+                        q: 'location:chennai+repos:5..6+type:user',
                         sort: 'repositories',
                         per_page: 100,
                         page: page + 1
@@ -145,11 +145,12 @@ var computeScoreOfProfiles = (profiles, next) => {
                 //console.info(profile[score_param].length * scores[score_param]);
 
                 profile["score"] = profile["score"] + profile[score_param].length * scores[score_param]
-            } else{
+            } else {
                 //console.info(profile[score_param],typeof profile[score_param]);
                 //console.info(scores[score_param],typeof scores[score_param]);
                 //console.info(profile[score_param] * scores[score_param]);
-                profile["score"] = profile["score"] + profile[score_param] * scores[score_param}
+                profile["score"] = profile["score"] + profile[score_param] * scores[score_param]
+            }
         });
     });
     var sortedProfiles = _.orderBy(profiles, "score", "desc");
@@ -226,7 +227,7 @@ async.waterfall([
     //displayTopDeveloperProfiles,
     exportProfilesToExcel
 ], function (err, res) {
-    console.info(res)
+    console.info(res);
 });
 
 
