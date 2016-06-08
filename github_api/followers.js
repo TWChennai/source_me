@@ -38,14 +38,14 @@ github.authenticate({
 var getTopDevelopersInChennai = (next) => {
     // TODO Because of the limitations of the search api , we need to use something similar to split the developer search based
     // on the repos count to avoid getting search results more than 1000 .
-    // TODO For some reason some developer profiles are duplicate. Should fix it .
     var developersInLocation = _.times(10, (page) => {
         return ( (callback) => {
                 github.search.users({
                         // q: 'location:chennai+repos:>10+type:user',
                         // q: 'location:chennai+repos:7..10+type:user',
                         q: 'location:chennai+repos:5..6+type:user',
-                        sort: 'repositories',
+                        sortBy: 'id',
+                        order: 'asc',
                         per_page: 100,
                         page: page + 1
                     },
@@ -76,7 +76,6 @@ var getTopDevelopersInChennai = (next) => {
 };
 
 var enrichPersonalInfo = (profiles, next) => {
-
     var developerPersonalInfo = _.map(profiles, (profile) => {
         return ((callback) => {
 
@@ -153,7 +152,7 @@ var computeScoreOfProfiles = (profiles, next) => {
             }
         });
     });
-    var sortedProfiles = _.orderBy(profiles, "score", "desc");
+    var sortedProfiles = _.orderBy(profiles, "score", "desc"); 
     next(null, sortedProfiles);
 };
 
