@@ -1,21 +1,9 @@
 const GitHubApi = require("github");
 const _ = require('lodash');
 const async = require('async');
-const Table = require('cli-table');
 const json2xls = require('json2xls');
 const fs = require('fs');
-
-const scores = {
-    forked_repository_count: 1,
-    //open_sourcing_private_repo_count : 5,
-    push_count: 2,
-    wikis_contributed: 3,
-    pull_request_reviewed: 8,
-    own_repository_count: 10,
-    languages_known: 10,
-    releases_made: 15,
-    pull_request_made: 20
-};
+var profileUtility = require('../utility/profile');
 
 const github = new GitHubApi({
     debug: true,
@@ -65,14 +53,13 @@ var getTopDevelopersInChennai = (next) => {
         var items = _.filter(_.flatten(_.map(response, "items")), (item) => {
             return !_.isUndefined(item);
         });
-        next(err, _.map(items, (element) => {
-            var profile = {};
-            profile.loginId = element.login;
-            return profile;
-        }));
+        next(err, profileUtility.parseItems(items));
     });
+};
 
-
+var computeScoreOfProfiles = (profiles, next) => {
+    profileUtility.computeScoreOfProfiles(profiles);
+    next(null, profileUtility.sortProfiles(profiles, "score", "desc"));
 };
 
 var enrichPersonalInfo = (profiles, next) => {
@@ -88,11 +75,7 @@ var enrichPersonalInfo = (profiles, next) => {
                             console.info(err);
                             console.info(result);
                         }
-                        profile.email = result.email ? result.email : "";
-                        profile.name = result.name ? result.name : "";
-                        profile.company = result.company ? result.company : "";
-                        profile.blog = result.blog ? result.blog : "";
-                        profile.hireable = result.hireable ? "Yes" : "No";
+                        profileUtility.updateProfilePersonalInfo(profile, result);
                         sleep(250);
                         callback(null, profile);
                     })
@@ -103,8 +86,6 @@ var enrichPersonalInfo = (profiles, next) => {
     async.series(developerPersonalInfo, (err, response) => {
         next(null, profiles)
     });
-
-
 };
 
 var EnrichReposInfo = (profiles, next) => {
@@ -113,14 +94,7 @@ var EnrichReposInfo = (profiles, next) => {
             github.repos.getFromUser({
                 user: profile.loginId
             }, (err, repositories) => {
-                var ownedRepositories = _.filter(repositories, {fork: false});
-                var forkedRepositories = _.filter(repositories, {fork: true});
-                //TODO get languages from language url.
-                profile.languages_known = _.filter(_.uniq(_.map(ownedRepositories, "language")), function (language) {
-                    return !_.isNull(language);
-                });
-                profile.own_repository_count = ownedRepositories.length;
-                profile.forked_repository_count = forkedRepositories.length;
+                profileUtility.updateRepositoriesInfo(profile, repositories);
                 sleep(250);
                 callback(null, profile)
             });
@@ -128,32 +102,8 @@ var EnrichReposInfo = (profiles, next) => {
     });
 
     async.series(listOfCallsForRepos, (err, profiles) => {
-        next(null, _.sortBy(_.reject(profiles, {own_repository_count: 0}), 'own_repository_count').reverse())
+        next(null, profileUtility.sortProfiles(profileUtility.rejectEmptyProfiles(profiles), 'own_repository_count').reverse())
     })
-};
-
-var computeScoreOfProfiles = (profiles, next) => {
-    _.each(profiles, function (profile) {
-        profile["score"] = 0;
-        _.each(_.keys(scores), (score_param) => {
-            //console.info(score_param);
-            if (score_param == 'languages_known') {
-                //console.info(profile['languages_known']);
-                //console.info(profile[score_param].length,typeof profile[score_param].length);
-                //console.info(scores[score_param],typeof scores[score_param]);
-                //console.info(profile[score_param].length * scores[score_param]);
-
-                profile["score"] = profile["score"] + profile[score_param].length * scores[score_param]
-            } else {
-                //console.info(profile[score_param],typeof profile[score_param]);
-                //console.info(scores[score_param],typeof scores[score_param]);
-                //console.info(profile[score_param] * scores[score_param]);
-                profile["score"] = profile["score"] + profile[score_param] * scores[score_param]
-            }
-        });
-    });
-    var sortedProfiles = _.orderBy(profiles, "score", "desc"); 
-    next(null, sortedProfiles);
 };
 
 var EnrichDeveloperActivity = (profiles, next) => {
@@ -168,14 +118,7 @@ var EnrichDeveloperActivity = (profiles, next) => {
                 if (err) {
                     console.info(err);
                 }
-                if (result) {
-                    profile.releases_made = _.filter(result, {type: 'releaseEvent'}).length;
-                    profile.push_count = _.filter(result, {type: 'PushEvent'}).length;
-                    profile.pull_request_made = _.filter(result, {type: 'PullRequestEvent'}).length;
-                    profile.pull_request_reviewed = _.filter(result, {type: 'PullRequestReviewCommentEvent'}).length;
-                    profile.open_sourcing_private_repo_count = _.filter(result, {type: 'PublicEvent'}).length;
-                    profile.wikis_contributed = _.filter(result, {type: 'GollumEvent'}).length
-                }
+                profileUtility.updateActivityInfo(profile, result);
                 sleep(250);
                 callback(null, profile)
             });
@@ -183,8 +126,8 @@ var EnrichDeveloperActivity = (profiles, next) => {
     });
 
     async.series(developersActivityInfo, (err, profiles) => {
-        next(null, profiles)
-    })
+        next(null, profiles);
+    });
 };
 
 const sleep = (milliseconds) => {
@@ -196,17 +139,8 @@ const sleep = (milliseconds) => {
     }
 };
 
-var displayTopDeveloperProfiles = (profiles) => {
-
-    var table = new Table({
-        head: _.keys(profiles[0]),
-        colWidths: [20, 20, 10, 15, 20, 10, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-    });
-
-    _.forEach(profiles, (profile) => {
-        table.push(_.values(profile));
-    });
-    console.log(table.toString());
+var displayTopDeveloperProfiles = (profiles) => {    
+    console.log(profileUtility.formatProfilesAsTable(profiles).toString());
 };
 
 
