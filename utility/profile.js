@@ -23,7 +23,7 @@ module.exports = {
       return { loginId: element.login }
     });
   },
-  computeScoreOfProfiles: function (profiles, next) {
+  computeScoreOfProfiles: function (profiles) {
     _.each(profiles, function (profile) {
       profile['score'] = 0
       _.each(_.keys(scores), (score_param) => {
