@@ -1,3 +1,5 @@
-Few developer profiles are duplicated . Need to fix.
+# Few developer profiles are duplicated . Need to fix.
 We need to write test !!!!
-For few developers the score is calculated as nan. Need to fix
+# For few developers the score is calculated as nan. Need to fix
+
+(#) - Might be fixed, have to confirm.

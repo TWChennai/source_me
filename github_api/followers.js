@@ -1,3 +1,4 @@
+'use strict';
 const GitHubApi = require("github");
 const _ = require('lodash');
 const async = require('async');
@@ -26,7 +27,7 @@ github.authenticate({
 var getTopDevelopersInChennai = (next) => {
     // TODO Because of the limitations of the search api , we need to use something similar to split the developer search based
     // on the repos count to avoid getting search results more than 1000 .
-    var developersInLocation = _.times(10, (page) => {
+    var developersInLocation = _.times(2, (page) => {
         return ( (callback) => {
                 github.search.users({
                         // q: 'location:chennai+repos:>10+type:user',
@@ -34,7 +35,7 @@ var getTopDevelopersInChennai = (next) => {
                         q: 'location:chennai+repos:5..6+type:user',
                         sortBy: 'id',
                         order: 'asc',
-                        per_page: 100,
+                        per_page: 2,
                         page: page + 1
                     },
                     (err, result) => {
@@ -75,7 +76,7 @@ var enrichPersonalInfo = (profiles, next) => {
                             console.info(err);
                             console.info(result);
                         }
-                        profileUtility.updateProfilePersonalInfo(profile, result);
+                        profile.updatePersonalInfo(result);
                         sleep(250);
                         callback(null, profile);
                     })
@@ -94,7 +95,7 @@ var EnrichReposInfo = (profiles, next) => {
             github.repos.getFromUser({
                 user: profile.loginId
             }, (err, repositories) => {
-                profileUtility.updateRepositoriesInfo(profile, repositories);
+                profile.updateRepositoriesInfo(repositories);
                 sleep(250);
                 callback(null, profile)
             });
@@ -118,7 +119,7 @@ var EnrichDeveloperActivity = (profiles, next) => {
                 if (err) {
                     console.info(err);
                 }
-                profileUtility.updateActivityInfo(profile, result);
+                profile.updateActivityInfo(result);
                 sleep(250);
                 callback(null, profile)
             });
@@ -146,7 +147,13 @@ var displayTopDeveloperProfiles = (profiles) => {
 
 var exportProfilesToExcel = (profiles) => {
 
-    var xls = json2xls(profiles);
+    var xls = json2xls(profiles, 
+    {
+        fields: ['name', 'email', 'company', 'hireable', 'score', 
+        'languages_known', 'loginId', 'blog', 'releases_made', 'push_count', 
+        'pull_request_made', 'pull_request_reviewed', 'open_sourcing_private_repo_count', 
+        'wikis_contributed', 'own_repository_count', 'forked_repository_count']
+    });
 
     fs.writeFileSync('data.xlsx', xls, 'binary');
 };
@@ -157,7 +164,7 @@ async.waterfall([
     EnrichReposInfo,
     EnrichDeveloperActivity,
     computeScoreOfProfiles,
-    //displayTopDeveloperProfiles,
+   // displayTopDeveloperProfiles,
     exportProfilesToExcel
 ], function (err, res) {
     console.info(res);
