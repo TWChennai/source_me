@@ -94,4 +94,4 @@ fabric.properties
 # modules.xml
 *.pyc
 train_algorithm/input
-
+.DS_Store
