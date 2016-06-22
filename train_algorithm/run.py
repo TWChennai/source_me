@@ -42,6 +42,11 @@ def split_data(df):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split_test_size, random_state=42) 
     return X_train, X_test, y_train, y_test
 
+def print_train_test_split_percentage(X_train,df):
+    print("{0:0.2f}% in training set".format((len(X_train)/len(df.index)) * 100))
+    print("{0:0.2f}% in test set".format((len(X_test)/len(df.index)) * 100))
+    print("")
+
 
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
@@ -49,5 +54,7 @@ clean_data_frame = clean_up_data(data_frame)
 print_class_distribution(clean_data_frame)
 
 X_train, X_test, y_train, y_test = split_data(clean_data_frame)
+
+print_train_test_split_percentage(X_train,clean_data_frame)
 
 
