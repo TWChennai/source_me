@@ -92,3 +92,5 @@ fabric.properties
 
 # *.iml
 # modules.xml
+*.pyc
+
