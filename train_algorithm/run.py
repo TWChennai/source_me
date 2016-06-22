@@ -1,5 +1,6 @@
 from __future__ import division
 from sklearn.cross_validation import train_test_split
+from sklearn.naive_bayes import GaussianNB
 
 import numpy as np
 import pandas as pd
@@ -56,6 +57,12 @@ def print_train_test_class_dist(y_train,y_test):
     print("Test False     : {0} ({1:0.2f}%)".format(len(y_test[y_test[:] == 0]), (len(y_test[y_test[:] == 0])/len(y_test) * 100.0)))
     print("")
 
+def run_naive_bayes(X_train,y_train):
+    # create Gaussian Naive Bayes model object and train it with the data
+    nb_model = GaussianNB()
+    nb_model.fit(X_train, y_train.ravel())
+    return nb_model
+
 
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
@@ -67,5 +74,7 @@ X_train, X_test, y_train, y_test = split_data(clean_data_frame)
 print_train_test_split_percentage(X_train,clean_data_frame)
 
 print_train_test_class_dist(y_train,y_test)
+
+nb_model = run_naive_bayes(X_train,y_train)
 
 
