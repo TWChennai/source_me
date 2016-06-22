@@ -64,11 +64,18 @@ def run_naive_bayes(X_train,y_train):
     nb_model.fit(X_train, y_train.ravel())
     return nb_model
 
-def print_accuracy_score_for_model(model, X_test):
+
+def predict_testdata(model,X_test):
     model_predict_test = model.predict(X_test)
+    return model_predict_test
+
+
+def print_accuracy_score_for_model(model, X_test):
     # training metrics
+    model_predict_test = predict_testdata(model,X_test)
     print("Accuracy: {0:.4f}".format(metrics.accuracy_score(y_test, model_predict_test)))
     print("")
+
 
 
 data_frame = get_data_from_csv()
