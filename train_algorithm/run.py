@@ -48,6 +48,15 @@ def print_train_test_split_percentage(X_train,df):
     print("")
 
 
+def print_train_test_class_dist(y_train,y_test):
+    print("Training True  : {0} ({1:0.2f}%)".format(len(y_train[y_train[:] == 1]), (len(y_train[y_train[:] == 1])/len(y_train) * 100.0)))
+    print("Training False : {0} ({1:0.2f}%)".format(len(y_train[y_train[:] == 0]), (len(y_train[y_train[:] == 0])/len(y_train) * 100.0)))
+    print("")
+    print("Test True      : {0} ({1:0.2f}%)".format(len(y_test[y_test[:] == 1]), (len(y_test[y_test[:] == 1])/len(y_test) * 100.0)))
+    print("Test False     : {0} ({1:0.2f}%)".format(len(y_test[y_test[:] == 0]), (len(y_test[y_test[:] == 0])/len(y_test) * 100.0)))
+    print("")
+
+
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
 
@@ -56,5 +65,7 @@ print_class_distribution(clean_data_frame)
 X_train, X_test, y_train, y_test = split_data(clean_data_frame)
 
 print_train_test_split_percentage(X_train,clean_data_frame)
+
+print_train_test_class_dist(y_train,y_test)
 
 
