@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegressionCV
+from sklearn import tree
 from sklearn import metrics
 
 import numpy as np
@@ -144,6 +145,11 @@ def run_logistic_regression_with_cross_validation():
     lr_cv_model.fit(X_train, y_train.ravel())
     return lr_cv_model
 
+def run_decision_tree():
+    dt_model = tree.DecisionTreeClassifier()
+    dt_model = dt_model.fit(X_train, y_train.ravel())
+    return dt_model
+
 
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
@@ -186,3 +192,8 @@ print("Logistic-regression model with cross validation:")
 print_accuracy_score_for_model(lr_cv_model,X_test,y_test)
 print_confusion_matrix_classification_report(lr_cv_model,X_test,y_test)
 
+# Decision tress classifier
+dt_model = run_decision_tree()
+print("Decision Tree Classifier model:")
+print_accuracy_score_for_model(dt_model,X_test,y_test)
+print_confusion_matrix_classification_report(dt_model,X_test,y_test)
