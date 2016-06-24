@@ -152,9 +152,9 @@ def run_decision_tree():
     dt_model = dt_model.fit(X_train, y_train.ravel())
     return dt_model
 
-def create_decision_tree_png():
+def create_decision_tree_png(model,features):
     dot_data = StringIO()  
-    tree.export_graphviz(clf, out_file=dot_data, feature_names=features)  
+    tree.export_graphviz(dt_model, out_file=dot_data, feature_names=features)  
     graph = pydot.graph_from_dot_data(dot_data.getvalue())  
     graph.write_png('./graphs/decision_tree_graph.png')
 
@@ -205,3 +205,5 @@ dt_model = run_decision_tree()
 print("Decision Tree Classifier model:")
 print_accuracy_score_for_model(dt_model,X_test,y_test)
 print_confusion_matrix_classification_report(dt_model,X_test,y_test)
+features = ['Years Experience','Level of Education','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
+create_decision_tree_png(dt_model,features)
