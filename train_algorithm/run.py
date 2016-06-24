@@ -4,6 +4,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import LogisticRegressionCV
 from sklearn import metrics
 
 import numpy as np
@@ -136,6 +137,13 @@ def run_stochastic_gradient_descent():
     return sgd_model
 
 
+def run_logistic_regression_with_cross_validation():
+    #splits the data into cv folds and iterates Cs times to find the best c_value
+    lr_cv_model = LogisticRegressionCV(n_jobs=-1, random_state=42, Cs=3, cv=5, refit=False, class_weight="balanced")  
+    # setting number of jobs to -1 which uses all cores to parallelize
+    lr_cv_model.fit(X_train, y_train.ravel())
+    return lr_cv_model
+
 
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
@@ -171,3 +179,10 @@ sgd_model = run_stochastic_gradient_descent()
 print("Stochastic-gradient model:")
 print_accuracy_score_for_model(sgd_model,X_test,y_test)
 print_confusion_matrix_classification_report(sgd_model,X_test,y_test)
+
+# Logistic regression with cross validation
+lr_cv_model = run_logistic_regression_with_cross_validation()
+print("Logistic-regression model with cross validation:")
+print_accuracy_score_for_model(lr_cv_model,X_test,y_test)
+print_confusion_matrix_classification_report(lr_cv_model,X_test,y_test)
+
