@@ -71,13 +71,22 @@ def predict_testdata(model,X_test):
     return model_predict_test
 
 
-def print_accuracy_score_for_model(model, X_test):
+def print_accuracy_score_for_model(model, X_test, y_test):
     # training metrics
     model_predict_test = predict_testdata(model,X_test)
     print("Accuracy: {0:.4f}".format(metrics.accuracy_score(y_test, model_predict_test)))
     print("")
 
+def print_confusion_matrix_classification_report(model,X_test,y_test):
+    print("Confusion Matrix")
+    # Note the use of labels for set 1=True to upper left and 0=False to lower right  
+    model_predict_test = model.predict(X_test)
+    print("{0}".format(metrics.confusion_matrix(y_test, model_predict_test, labels=[1, 0])))
+    print("")
 
+    print("Classification Report")
+    print(metrics.classification_report(y_test, model_predict_test, labels=[1,0]))
+    print("")
 
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
@@ -90,9 +99,10 @@ print_train_test_split_percentage(X_train,clean_data_frame)
 
 print_train_test_class_dist(y_train,y_test)
 
+#Naive-bayes model
 nb_model = run_naive_bayes(X_train,y_train)
-print_accuracy_score_for_model(nb_model,X_test)
-
+print_accuracy_score_for_model(nb_model,X_test,y_test)
+print_confusion_matrix_classification_report(nb_model,X_test,y_test)
 
 
 
