@@ -1,6 +1,7 @@
 from __future__ import division
 from sklearn.cross_validation import train_test_split
 from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
 import numpy as np
@@ -59,13 +60,6 @@ def print_train_test_class_dist(y_train,y_test):
     print("Test False     : {0} ({1:0.2f}%)".format(len(y_test[y_test[:] == 0]), (len(y_test[y_test[:] == 0])/len(y_test) * 100.0)))
     print("")
 
-def run_naive_bayes(X_train,y_train):
-    # create Gaussian Naive Bayes model object and train it with the data
-    nb_model = GaussianNB()
-    nb_model.fit(X_train, y_train.ravel())
-    return nb_model
-
-
 def predict_testdata(model,X_test):
     model_predict_test = model.predict(X_test)
     return model_predict_test
@@ -88,6 +82,20 @@ def print_confusion_matrix_classification_report(model,X_test,y_test):
     print(metrics.classification_report(y_test, model_predict_test, labels=[1,0]))
     print("")
 
+
+def run_naive_bayes(X_train,y_train):
+    # create Gaussian Naive Bayes model object and train it with the data
+    nb_model = GaussianNB()
+    nb_model.fit(X_train, y_train.ravel())
+    return nb_model
+
+def run_random_forest(X_train,y_train):
+    # create RandomForrestClassifier and train it with data
+    rf_model = RandomForestClassifier(random_state=42)      
+    rf_model.fit(X_train, y_train.ravel()) 
+    return rf_model;
+
+
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
 
@@ -101,9 +109,14 @@ print_train_test_class_dist(y_train,y_test)
 
 #Naive-bayes model
 nb_model = run_naive_bayes(X_train,y_train)
+print("Naive-Bayes model:")
 print_accuracy_score_for_model(nb_model,X_test,y_test)
 print_confusion_matrix_classification_report(nb_model,X_test,y_test)
 
-
+#Random-forest classifier
+rf_model = run_random_forest(X_train,y_train)
+print("Random-forest model:")
+print_accuracy_score_for_model(rf_model,X_test,y_test)
+print_confusion_matrix_classification_report(rf_model,X_test,y_test)
 
 
