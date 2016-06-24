@@ -8,11 +8,10 @@ from sklearn.linear_model import LogisticRegressionCV
 from sklearn import tree
 from sklearn import metrics
 from sklearn.externals.six import StringIO  
-import pydot 
 
+import pydot 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 def get_data_from_csv():
@@ -157,6 +156,7 @@ def create_decision_tree_png(model,features):
     tree.export_graphviz(dt_model, out_file=dot_data, feature_names=features)  
     graph = pydot.graph_from_dot_data(dot_data.getvalue())  
     graph.write_png('./graphs/decision_tree_graph.png')
+
 
 
 data_frame = get_data_from_csv()
