@@ -7,6 +7,8 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn import tree
 from sklearn import metrics
+from sklearn.externals.six import StringIO  
+import pydot 
 
 import numpy as np
 import pandas as pd
@@ -149,6 +151,12 @@ def run_decision_tree():
     dt_model = tree.DecisionTreeClassifier()
     dt_model = dt_model.fit(X_train, y_train.ravel())
     return dt_model
+
+def create_decision_tree_png():
+    dot_data = StringIO()  
+    tree.export_graphviz(clf, out_file=dot_data, feature_names=features)  
+    graph = pydot.graph_from_dot_data(dot_data.getvalue())  
+    graph.write_png('./graphs/decision_tree_graph.png')
 
 
 data_frame = get_data_from_csv()
