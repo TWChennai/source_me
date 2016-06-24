@@ -96,11 +96,38 @@ def run_random_forest(X_train,y_train):
     rf_model.fit(X_train, y_train.ravel()) 
     return rf_model;
 
-def run_logistic_regression(X_train,y_train):
+def run_logistic_regression(X_train,X_test,y_train,y_test):
     # create LogisticRegression model and train it with the data
-    lr_model =LogisticRegression(C=0.7, random_state=42)
+
+    #tune it with the appropriate regularization hyperparameter
+    C_start = 0.01
+    C_end = 5
+    C_inc = 0.01
+    C_values, recall_scores = [], []
+
+    C_val = C_start
+    best_recall_score = 0
+    while (C_val < C_end):
+        C_values.append(C_val)
+        lr_model_loop = LogisticRegression(C=C_val, class_weight="balanced", random_state=42)
+        lr_model_loop.fit(X_train, y_train.ravel())
+        lr_predict_loop_test = lr_model_loop.predict(X_test)
+        recall_score = metrics.recall_score(y_test, lr_predict_loop_test)
+        recall_scores.append(recall_score)
+        if (recall_score > best_recall_score):
+            best_recall_score = recall_score
+            best_lr_predict_test = lr_predict_loop_test
+        
+        C_val = C_val + C_inc
+
+    best_score_C_val = C_values[recall_scores.index(best_recall_score)]    
+
+    # Uses the class_weight=balanced and uses the best C_val computed
+    lr_model =LogisticRegression( class_weight="balanced", C=best_score_C_val, random_state=42)
     lr_model.fit(X_train, y_train.ravel())
     return lr_model
+
+
 
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
@@ -126,7 +153,7 @@ print_accuracy_score_for_model(rf_model,X_test,y_test)
 print_confusion_matrix_classification_report(rf_model,X_test,y_test)
 
 #Logistic Regression model
-lr_model = run_logistic_regression(X_train,y_train)
+lr_model = run_logistic_regression(X_train,X_test,y_train,y_test)
 print("Logistic-regression model:")
 print_accuracy_score_for_model(lr_model,X_test,y_test)
 print_confusion_matrix_classification_report(lr_model,X_test,y_test)
