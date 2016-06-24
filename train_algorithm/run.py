@@ -17,10 +17,11 @@ def get_data_from_csv():
 def clean_up_data(df):
     d = {'Y': 1, 'N': 0}
     df['Hired'] = df['Hired'].map(d)
-    df['Employed?'] = df['Employed?'].map(d)
     df['Top-tier school'] = df['Top-tier school'].map(d)
-    df['Interned'] = df['Interned'].map(d)
-    d = {'BS': 0, 'MS': 1, 'PhD': 2}
+    df['had/has a pet project?'] = df['had/has a pet project?'].map(d)
+    df['recognizations?'] = df['recognizations?'].map(d)
+    df['Certifications?'] = df['Certifications?'].map(d)
+    d = {'BS': 0, 'MS': 1, 'MCA': 1, 'PhD': 2}
     df['Level of Education'] = df['Level of Education'].map(d)    
     return df
 
@@ -34,7 +35,7 @@ def print_class_distribution(df):
 
 
 def split_data(df):
-    feature_col_names = ['Years Experience','Employed?','Previous employers','Level of Education','Top-tier school','Interned']
+    feature_col_names = ['Years Experience','Level of Education','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
     predicted_class_names = ['Hired']
 
     X = df[feature_col_names].values     # predictor feature columns
@@ -91,6 +92,8 @@ print_train_test_class_dist(y_train,y_test)
 
 nb_model = run_naive_bayes(X_train,y_train)
 print_accuracy_score_for_model(nb_model,X_test)
+
+
 
 
 
