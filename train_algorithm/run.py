@@ -2,6 +2,7 @@ from __future__ import division
 from sklearn.cross_validation import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 
 import numpy as np
@@ -95,6 +96,11 @@ def run_random_forest(X_train,y_train):
     rf_model.fit(X_train, y_train.ravel()) 
     return rf_model;
 
+def run_logistic_regression(X_train,y_train):
+    # create LogisticRegression model and train it with the data
+    lr_model =LogisticRegression(C=0.7, random_state=42)
+    lr_model.fit(X_train, y_train.ravel())
+    return lr_model
 
 data_frame = get_data_from_csv()
 clean_data_frame = clean_up_data(data_frame)
@@ -119,4 +125,8 @@ print("Random-forest model:")
 print_accuracy_score_for_model(rf_model,X_test,y_test)
 print_confusion_matrix_classification_report(rf_model,X_test,y_test)
 
-
+#Logistic Regression model
+lr_model = run_logistic_regression(X_train,y_train)
+print("Logistic-regression model:")
+print_accuracy_score_for_model(lr_model,X_test,y_test)
+print_confusion_matrix_classification_report(lr_model,X_test,y_test)
