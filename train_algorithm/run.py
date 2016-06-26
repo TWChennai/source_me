@@ -12,6 +12,7 @@ from sklearn.externals.six import StringIO
 import pydot 
 import numpy as np
 import pandas as pd
+import cPickle
 
 FEATURES = ['Years Experience','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
 
@@ -206,3 +207,6 @@ print("Decision Tree Classifier model:")
 print_accuracy_score_for_model(dt_model,X_test,y_test)
 print_confusion_matrix_classification_report(dt_model,X_test,y_test)
 create_decision_tree_png(dt_model,FEATURES)
+
+with open("../predict_candidate/algorithms/naive_bayes","wb") as f:
+    cPickle.dump(nb_model,f)
