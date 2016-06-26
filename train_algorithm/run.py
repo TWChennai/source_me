@@ -27,8 +27,8 @@ def clean_up_data(df):
     df['had/has a pet project?'] = df['had/has a pet project?'].map(d)
     df['recognizations?'] = df['recognizations?'].map(d)
     df['Certifications?'] = df['Certifications?'].map(d)
-    d = {'BS': 0, 'MS': 1, 'MCA': 1, 'PhD': 2}
-    df['Level of Education'] = df['Level of Education'].map(d)    
+    #d = {'BS': 0, 'MS': 1, 'MCA': 1, 'PhD': 2}
+    #df['Level of Education'] = df['Level of Education'].map(d)    
     return df
 
 def print_class_distribution(df):
@@ -41,7 +41,7 @@ def print_class_distribution(df):
 
 
 def split_data(df):
-    feature_col_names = ['Years Experience','Level of Education','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
+    feature_col_names = ['Years Experience','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
     predicted_class_names = ['Hired']
 
     X = df[feature_col_names].values     # predictor feature columns
@@ -205,5 +205,5 @@ dt_model = run_decision_tree()
 print("Decision Tree Classifier model:")
 print_accuracy_score_for_model(dt_model,X_test,y_test)
 print_confusion_matrix_classification_report(dt_model,X_test,y_test)
-features = ['Years Experience','Level of Education','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
+features = ['Years Experience','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
 create_decision_tree_png(dt_model,features)
