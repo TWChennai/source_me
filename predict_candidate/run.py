@@ -42,7 +42,22 @@ def getInput():
     return exp, tt_school, pet_project, recog, cert
 
 
+def map_yn_value(yn_var):
+    return 1 if yn_var=='y' else 0
+
+
+def map_to_numericals(exp, tt_school, pet_project, recog, cert):
+    exp = int(exp)
+    tt_school = map_yn_value(tt_school)
+    pet_project = map_yn_value(pet_project)
+    recog = map_yn_value(recog)
+    cert = map_yn_value(cert)
+    return exp, tt_school, pet_project, recog, cert
+
+
 importAlgorithms()
 exp, tt_school, pet_project, recog, cert = getInput()
+exp, tt_school, pet_project, recog, cert = map_to_numericals(exp, tt_school, pet_project, recog, cert)
+
 
 
