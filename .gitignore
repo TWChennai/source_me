@@ -95,4 +95,5 @@ fabric.properties
 *.pyc
 train_algorithm/input
 train_algorithm/graphs
+predict_candidate/algorithms
 .DS_Store
