@@ -1,8 +1,5 @@
 from sklearn.externals import joblib
 
-
-
-
 def importAlgorithms():
     nb_model = joblib.load("algorithms/naive_bayes")
     rf_model = joblib.load("algorithms/random_forest")
@@ -10,7 +7,7 @@ def importAlgorithms():
     sgd_model = joblib.load("algorithms/stochastic_gradient")
     lr_cv_model = joblib.load("algorithms/logistic_regression_cv")
     dt_model = joblib.load("algorithms/decision_tree")
-
+    return nb_model,rf_model,lr_model,sgd_model,lr_cv_model,dt_model
 
 def getInput():
     print("Enter the details of the candidate:\n")
@@ -55,7 +52,7 @@ def map_to_numericals(exp, tt_school, pet_project, recog, cert):
     return exp, tt_school, pet_project, recog, cert
 
 
-importAlgorithms()
+nb_model,rf_model,lr_model,sgd_model,lr_cv_model,dt_model = importAlgorithms()
 exp, tt_school, pet_project, recog, cert = getInput()
 exp, tt_school, pet_project, recog, cert = map_to_numericals(exp, tt_school, pet_project, recog, cert)
 
