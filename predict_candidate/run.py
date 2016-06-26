@@ -60,13 +60,18 @@ def generate_predictor_list(exp,tt_school,pet_project,recog,cert):
     predictor_list.append(cert)
     return predictor_list
 
+def generate_predictor_list_2d(predictor_list):
+    predictor_list_2d = []
+    predictor_list_2d.append(predictor_list)
+    return predictor_list_2d
+
 
 nb_model,rf_model,lr_model,sgd_model,lr_cv_model,dt_model = importAlgorithms()
 exp, tt_school, pet_project, recog, cert = getInput()
 exp, tt_school, pet_project, recog, cert = map_to_numericals(exp,tt_school,pet_project,recog,cert)
 predictor_list = generate_predictor_list(exp,tt_school,pet_project,recog,cert)
-
-print dt_model.predict(predictor_list)
+predictor_list_2d = generate_predictor_list_2d(predictor_list)
+print dt_model.predict(predictor_list_2d)
 
 
 
