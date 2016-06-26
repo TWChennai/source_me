@@ -51,10 +51,20 @@ def map_to_numericals(exp, tt_school, pet_project, recog, cert):
     cert = map_yn_value(cert)
     return exp, tt_school, pet_project, recog, cert
 
+def generate_predictor_list(exp,tt_school,pet_project,recog,cert):
+    predictor_list = []
+    predictor_list.append(exp)
+    predictor_list.append(tt_school)
+    predictor_list.append(pet_project)
+    predictor_list.append(recog)
+    predictor_list.append(cert)
+    return predictor_list
+
 
 nb_model,rf_model,lr_model,sgd_model,lr_cv_model,dt_model = importAlgorithms()
 exp, tt_school, pet_project, recog, cert = getInput()
-exp, tt_school, pet_project, recog, cert = map_to_numericals(exp, tt_school, pet_project, recog, cert)
+exp, tt_school, pet_project, recog, cert = map_to_numericals(exp,tt_school,pet_project,recog,cert)
+predictor_list = generate_predictor_list(exp,tt_school,pet_project,recog,cert)
 
 
 
