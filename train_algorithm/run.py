@@ -13,6 +13,7 @@ import pydot
 import numpy as np
 import pandas as pd
 
+FEATURES = ['Years Experience','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
 
 def get_data_from_csv():
     input_file = "./input/PastHires.csv"
@@ -41,10 +42,9 @@ def print_class_distribution(df):
 
 
 def split_data(df):
-    feature_col_names = ['Years Experience','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
     predicted_class_names = ['Hired']
 
-    X = df[feature_col_names].values     # predictor feature columns
+    X = df[FEATURES].values     # predictor feature columns
     y = df[predicted_class_names].values # predicted class (1=true, 0=false)
     split_test_size = 0.30
 
@@ -205,5 +205,4 @@ dt_model = run_decision_tree()
 print("Decision Tree Classifier model:")
 print_accuracy_score_for_model(dt_model,X_test,y_test)
 print_confusion_matrix_classification_report(dt_model,X_test,y_test)
-features = ['Years Experience','Top-tier school','had/has a pet project?','recognizations?','Certifications?']
-create_decision_tree_png(dt_model,features)
+create_decision_tree_png(dt_model,FEATURES)
