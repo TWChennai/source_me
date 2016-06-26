@@ -176,30 +176,40 @@ nb_model = run_naive_bayes(X_train,y_train)
 print("Naive-Bayes model:")
 print_accuracy_score_for_model(nb_model,X_test,y_test)
 print_confusion_matrix_classification_report(nb_model,X_test,y_test)
+with open("../predict_candidate/algorithms/naive_bayes","wb") as f:
+    cPickle.dump(nb_model,f)
 
 #Random-forest classifier
 rf_model = run_random_forest(X_train,y_train)
 print("Random-forest model:")
 print_accuracy_score_for_model(rf_model,X_test,y_test)
 print_confusion_matrix_classification_report(rf_model,X_test,y_test)
+with open("../predict_candidate/algorithms/random_forest","wb") as f:
+    cPickle.dump(rf_model,f)
 
 #Logistic Regression model
 lr_model = run_logistic_regression(X_train,X_test,y_train,y_test)
 print("Logistic-regression model:")
 print_accuracy_score_for_model(lr_model,X_test,y_test)
 print_confusion_matrix_classification_report(lr_model,X_test,y_test)
+with open("../predict_candidate/algorithms/logistic_regression","wb") as f:
+    cPickle.dump(lr_model,f)
 
 #Stochastic Gradient Descent Classifier
 sgd_model = run_stochastic_gradient_descent()
 print("Stochastic-gradient model:")
 print_accuracy_score_for_model(sgd_model,X_test,y_test)
 print_confusion_matrix_classification_report(sgd_model,X_test,y_test)
+with open("../predict_candidate/algorithms/stochastic_gradient","wb") as f:
+    cPickle.dump(sgd_model,f)
 
 # Logistic regression with cross validation
 lr_cv_model = run_logistic_regression_with_cross_validation()
 print("Logistic-regression model with cross validation:")
 print_accuracy_score_for_model(lr_cv_model,X_test,y_test)
 print_confusion_matrix_classification_report(lr_cv_model,X_test,y_test)
+with open("../predict_candidate/algorithms/logistic_regression_cv","wb") as f:
+    cPickle.dump(lr_cv_model,f)
 
 # Decision tress classifier
 dt_model = run_decision_tree()
@@ -207,6 +217,5 @@ print("Decision Tree Classifier model:")
 print_accuracy_score_for_model(dt_model,X_test,y_test)
 print_confusion_matrix_classification_report(dt_model,X_test,y_test)
 create_decision_tree_png(dt_model,FEATURES)
-
-with open("../predict_candidate/algorithms/naive_bayes","wb") as f:
-    cPickle.dump(nb_model,f)
+with open("../predict_candidate/algorithms/decision_tree","wb") as f:
+    cPickle.dump(dt_model,f)
