@@ -66,5 +66,7 @@ exp, tt_school, pet_project, recog, cert = getInput()
 exp, tt_school, pet_project, recog, cert = map_to_numericals(exp,tt_school,pet_project,recog,cert)
 predictor_list = generate_predictor_list(exp,tt_school,pet_project,recog,cert)
 
+print dt_model.predict(predictor_list)
+
 
 
